@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hospital_patient_form1" model="ir.ui.view">
+        <field name="name">hospital.patient.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_appointments"
+                                icon="fa-star">
+                            <field string="Appointment" name="appointment_count" widget="statinfo"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="ref" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="name"/>
+                        <field name="appointment_count"/>
+                        <field name="is_child"/>
+                        <field name="date_of_birth"/>
+                        <field name="gender"/>
+                        <field name="doctor_id" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                        <field name="next_appointment_date"/>
+                        <field name="dept_amount"/>
+                        <field name="age"/>
+<!--                        <field name="appointment_ids" invisible="1"/>-->
+<!--                        <field name="appointment_count"/>-->
+                        <field name="capitalized_name"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Appointments" name="appointments" readonly="1">
+                            <field name="appointment_ids" readonly="1">
+                                <tree>
+                                    <field name="ref"/>
+                                    <field name="doctor_id"/>
+                                    <field name="booking_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+<!--    <record id="view_cancel_appointment_form_inherit" model="ir.ui.view">-->
+<!--        <field name="name">cancel.appointment.wizard.inherit</field>-->
+<!--        <field name="model">cancel.appointment.wizard</field>-->
+<!--        <field name="inherit_id" ref="mo_hospital.view_hospital_patient_form1"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//sheet" position="inside">-->
+<!--                <group>-->
+<!--                    <field name="appointment_id"/>-->
+<!--                </group>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="view_hospital_patient_tree" model="ir.ui.view">
+        <field name="name">hospital.patient.tree</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="ref"/>
+                <field name="name"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="next_appointment_date"/>
+                <field name="dept_amount"/>
+                <field name="capitalized_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hospital_patient_kanban" model="ir.ui.view">
+        <field name="name">hospital.patient.kanban</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="gender"/>
+                <field name="age"/>
+                <field name="dept_amount"/>
+                <field name="next_appointment_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <ul>
+                                    <li>
+                                        <strong>Name:</strong>
+                                        <field name="name"/>
+                                    </li>
+                                    <li>
+                                        <strong>Gender:</strong>
+                                        <field name="gender"/>
+                                    </li>
+                                    <li>
+                                        <strong>Age:</strong>
+                                        <field name="age"/>
+                                    </li>
+
+                                    <li>
+                                        <strong>Next Appointment:</strong>
+                                        <field name="next_appointment_date"/>
+                                    </li>
+                                    <li>
+                                        <strong>Dept Amount:</strong>
+                                        <field name="dept_amount"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hospital_patient_graph" model="ir.ui.view">
+        <field name="name">hospital.patient.graph</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <graph string="Patient Graph" sample="1">
+                <field name="dept_amount" type="measure"/>
+                <field name="name"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_hospital_patient_calendar" model="ir.ui.view">
+        <field name="name">hospital.patient.calendar</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <calendar string="Appointments Calendar" date_start="next_appointment_date"
+                      color="name" mode="month" quick_add="False">
+                <field name="name"/>
+                <field name="age"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_hospital_patient_search" model="ir.ui.view">
+        <field name="name">hospital.patient.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="ref"/>
+                <field name="name"/>
+                <!--<field name="name" filter_domain="['|', ('name', 'ilike', self), ('ref', 'ilike', self)]"/>-->
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="next_appointment_date"/>
+                <filter name="filter_male" string="Male" domain="[('gender', '=', 'male')]"/>
+                <filter name="filter_female" string="Female" domain="[('gender', '=', 'female')]"/>
+                <separator/>
+                <filter name="filter_childs" string="Childs" domain="[('is_child', '=', True)]"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Gender" name="group_by_gender" context="{'group_by': 'gender'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hospital_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,kanban,form,graph,calendar</field>
+        <field name="context">{'search_default_filter_child':1}</field> <!-- What this even do REMEMBER IT IN WIDGET -->
+        <field name="search_view_id"
+               ref="mo_hospital.view_hospital_patient_search"/> <!-- for multiple search view in a single model -->
+    </record>
+
+<!--    <menuitem-->
+<!--            id="menu_patients"-->
+<!--            name="Patients"-->
+<!--            parent="menu_hospital_root"-->
+<!--            action="action_hospital_patient"-->
+<!--            sequence="10"/>-->
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="add_patient_form_template" name="Add Patient Form">
+        <t t-call="website.layout">
+            <t t-if="request.session.get('message')">
+                <div class="alert alert-success" role="alert">
+                    <t t-esc="request.session.pop('message')"/>
+                </div>
+            </t>
+            <div container="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <h1>Add a New Patient</h1>
+                        <form action="/hospital/create_patient" method="post">
+                            <div class="form-group">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <label for="name">Patient Name:</label>
+                                <input type="text" id="name" name="name" class="form-control" required="True"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender:</label>
+                                <select id="gender" name="gender" class="form-control" required="True">
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Patient</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+
+
+
+<!--    <template id="patients_page" name="Hospital Patients">-->
+<!--        <t t-call="website.layout">-->
+<!--            <div class="container">-->
+<!--                <table class="table table-bordered">-->
+<!--                    <thead>-->
+<!--                        <tr>-->
+<!--                            <td>-->
+<!--                                <strong>-->
+<!--                                    Patient Name-->
+<!--                                </strong>-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                                <strong>-->
+<!--                                    Patient Name-->
+<!--                                </strong>-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                                <strong>-->
+<!--                                    Patient Name-->
+<!--                                </strong>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                        <t t-foreach="patients" t-as="patient">-->
+<!--                            <tr>-->
+<!--                                <td>-->
+<!--                                    <t t-esc="patient.name"/>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </t>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </t>-->
+<!--    </template>-->
+</odoo>
